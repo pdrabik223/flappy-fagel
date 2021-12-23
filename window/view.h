@@ -4,58 +4,22 @@
 
 #ifndef THELOCKSCREENQUESTION_SFML_WINDOW_VIEW_H_
 #define THELOCKSCREENQUESTION_SFML_WINDOW_VIEW_H_
-//#include "../go.h"
-#include "coord.h"
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#define BACKGROUND_COLOR sf::Color(27, 29, 28) // good gray
-//#define FOREGROUND_COLOR sf::Color(104,255,66) // good green
-//#define FOREGROUND_COLOR sf::Color(0,255,255) //  good cyan
-#define FOREGROUND_COLOR sf::Color(247, 56, 56) // good red
+#include "SFML/Graphics/CircleShape.hpp"
+#include "SFML/Graphics/RectangleShape.hpp"
 
-struct Dot {
-  enum class State { WHITE, BLACK, FREE };
-  //
-  //  Dot(const Coord &placement, Go::Rock rock) : placement(placement) {
-  //    switch (rock) {
-  //
-  //    case Go::Rock::WHITE:
-  //      state = State::WHITE;
-  //      break;
-  //    case Go::Rock::BLACK:
-  //      state = State::BLACK;
-  //      break;
-  //    case Go::Rock::NONE:
-  //      state = State::FREE;
-  //      break;
-  //    }
-  //  };
-
-  Dot(const Dot &other) = default;
-  Dot &operator=(const Dot &other) = default;
-
-  const Coord &GetPlacement() const;
-  void Draw(sf::RenderWindow &window, const sf::Vector2f &screen_placement);
-
-  Coord placement;
-  State state = State::FREE;
-  float radius = 20;
-};
-
+#include "../engine/fagel_engine.h"
 class View {
 public:
   View() = default;
+  View(const Engine &engine);
   View(const View &other) = default;
   View &operator=(const View &other) = default;
   //  View(const Go &game);
-  void Draw(sf::RenderWindow &window);
-  void DisplayLabel(int label, sf::Vector2f placement, float dot_radius,
-                    bool is_occupied, sf::RenderWindow &window);
+  virtual void Draw(sf::RenderWindow &window);
+  std::vector<sf::CircleShape> players_;
+  std::vector<sf::RectangleShape> pipes_;
 
-protected:
-  Coord shape_;
-  std::vector<Dot> dots_;
-
-  static sf::Font font_;
 };
 #endif // THELOCKSCREENQUESTION_SFML_WINDOW_VIEW_H_

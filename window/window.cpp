@@ -54,6 +54,7 @@ Window::Window(const sf::Vector2<float> &position, int width, int height)
 View Window::PopFrame() {
   View new_frame;
   const std::lock_guard<std::mutex> kLock(event_queue_mutex_);
+
   new_frame = frame_queue_.front();
   frame_queue_.pop();
 

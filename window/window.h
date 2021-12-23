@@ -7,7 +7,7 @@
 
 #include <SFML/Window/Event.hpp>
 
-#include "coord.h"
+//#include "coord.h"
 #include <mutex>
 #include <queue>
 #include <vector>

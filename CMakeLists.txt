@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 3.21)
 project(fagel)
 set(CMAKE_CXX_STANDARD 14)
+
 include_directories(engine)
 include_directories(window)
+include_directories(matrix)
+include_directories(neural_net)
+add_subdirectory(SFML)
+
+
 set(sfml_window_dir
         window/coord.h
         window/window.h
@@ -11,27 +17,33 @@ set(sfml_window_dir
         window/view.cpp
         )
 
-set(engine engine/engine.h
-
-        engine/engine.cpp
-        engine/player.h
-        engine/player.cpp
-
+set(neural_net_dir
+        matrix/matrix.h
+        matrix/matrix.cpp
+        neural_net/neural_net.h
+        neural_net/neural_net.cpp
+        neural_net/linear_layer.h
+        neural_net/linear_layer.cpp
         )
 
-
-add_subdirectory(SFML)
-
+set(engine_dir
+        engine/fagel_engine.h
+        engine/fagel_engine.cpp
+        engine/player.h
+        engine/player.cpp
+        )
 add_executable(main main.cpp
-        ${sfml_window_diri}
-        ${engine})
+        ${sfml_window_dir}
+        ${engine_dir}
+        ${neural_net_dir}
+        )
 
 
 set(executables main)
 
 foreach (executable IN LISTS executables)
     target_link_directories(${executable}
-            PUBLIC ${PROJECT_SOURCE_DIR}/sfml/src
+            PUBLIC ${PROJECT_SOURCE_DIR}/SFML/src
             )
 
     target_link_libraries(${executable}
@@ -41,6 +53,6 @@ foreach (executable IN LISTS executables)
             )
 
     target_include_directories(${executable}
-            PUBLIC ${PROJECT_SOURCE_DIR}/sfml/include
+            PUBLIC ${PROJECT_SOURCE_DIR}/SFML/include
             )
 endforeach ()
