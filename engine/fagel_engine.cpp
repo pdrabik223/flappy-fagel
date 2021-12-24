@@ -40,8 +40,15 @@ void Engine::Iterate() {
   }
   frame++;
 }
-bool Engine::CheckCollision(const Player &player) {
-  return false;
+bool Engine::CheckCollision(Player &player) {
+
+  if (player.position_.x + player_size_ <
+          holes_.begin()->x - (hole_width_ / 2) ||
+      player.position_.x - player_size_ > holes_.begin()->x + (hole_width_ / 2))
+    return false;
+
+  return true;
+
   //  Coord circle_distance ;
   //
   //  circle_distance .x = abs(circle.x - rect.x);
@@ -65,6 +72,7 @@ bool Engine::CheckCollision(const Player &player) {
   //                      2 + (circle_distance.y - rect.height / 2) ^ 2;
   //
   //  return (cornerDistance_sq <= (circle.r ^ 2));
+  return false;
 }
 const std::vector<Player> &Engine::GetPlayers() const { return players_; }
 const std::vector<Coord> &Engine::GetHoles() const { return holes_; }

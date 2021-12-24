@@ -54,7 +54,7 @@ public:
   double jump_height_ = 10;
   int size_ = 10;
   Coord position_;
-  int jump_buffer_length_ = 40;
+  int jump_buffer_length_ = 51;
   int kill_frame_ = 0;
 
 protected:

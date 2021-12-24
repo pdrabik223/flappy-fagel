@@ -52,7 +52,7 @@ public:
   int jump_buffer_ = 15;
 
 private:
-  static bool CheckCollision(const Player &player);
+   bool CheckCollision(Player &player);
 
 protected:
   int frame = 0;
