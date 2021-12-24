@@ -5,20 +5,19 @@
 #include "linear_layer.h"
 
 Linear::Linear(size_t previous_layer_height, size_t layer_height,
-             ActivationFunction activation_function)
-    :weights_(layer_height, previous_layer_height), biases_(layer_height, 1),
+               ActivationFunction activation_function)
+    : weights_(layer_height, previous_layer_height), biases_(layer_height, 1),
       activation_function_(activation_function), nodes_(layer_height, 1) {}
-
 
 void Linear::FillRandom() {
 
   for (int i = 0; i < biases_.GetHeight(); i++)
     for (int j = 0; j < biases_.GetWidth(); j++)
-      biases_.Get(i, j) = ((double)rand() / (double)RAND_MAX) / 10.0;
+      biases_.Get(i, j) = ((double)rand() / (double)RAND_MAX) / 100.0;
 
   for (int i = 0; i < weights_.GetHeight(); i++)
     for (int j = 0; j < weights_.GetWidth(); j++)
-      weights_.Get(i, j) = ((double)rand() / (double)RAND_MAX) / 10.0;
+      weights_.Get(i, j) = ((double)rand() / (double)RAND_MAX) / 100.0;
 }
 
 const matrix::Matrix<double> &Linear::GetNodes() const { return nodes_; }
@@ -29,7 +28,7 @@ matrix::Matrix<double> &Linear::GetBiases() { return biases_; }
 
 matrix::Matrix<double> &
 Linear::ApplyActivationFunction(const matrix::Matrix<double> &target_vector,
-                               ActivationFunction function_type) {
+                                ActivationFunction function_type) {
 
   if (!target_vector.IsVector())
     throw "incorrect shape";
@@ -100,7 +99,7 @@ Linear::ApplySigmoidDerivative(const matrix::Matrix<double> &vector_a) {
 }
 matrix::Matrix<double>
 Linear::ApplyDerivative(const matrix::Matrix<double> &vector_a,
-                       ActivationFunction activation_function) {
+                        ActivationFunction activation_function) {
   switch (activation_function) {
 
   case ActivationFunction::RELU:
@@ -129,8 +128,8 @@ ActivationFunction &Linear::GetActivationFunction() {
   return activation_function_;
 }
 Linear::Linear(const matrix::Matrix<double> &weights,
-             const matrix::Matrix<double> &biases,
-             ActivationFunction activation_function)
+               const matrix::Matrix<double> &biases,
+               ActivationFunction activation_function)
     : activation_function_(activation_function), weights_(weights),
       biases_(biases), nodes_(weights_.GetHeight(), 1),
       activated_nodes_(weights_.GetHeight(), 1) {}

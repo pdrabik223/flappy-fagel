@@ -39,7 +39,7 @@ public:
     holes_.push_back(new_hole);
   }
 
-  int hole_size_ = 40;
+  int hole_size_ = 50;
   int hole_width_ = 20;
   int distance_between_holes_ = 120;
 

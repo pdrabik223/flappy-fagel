@@ -41,10 +41,22 @@ void Engine::Iterate() {
   frame++;
 }
 bool Engine::CheckCollision(Player &player) {
+  // check if the player ISN'T in range of barrier a.k.a. touches the pipe
 
-  if (player.position_.x + player_size_ <
-          holes_.begin()->x - (hole_width_ / 2) ||
-      player.position_.x - player_size_ > holes_.begin()->x + (hole_width_ / 2))
+  const int &player_x = player.position_.x;
+  const int &player_y = player.position_.y;
+
+  const int &hole_x = holes_.begin()->x;
+  const int &hole_y = holes_.begin()->y;
+
+
+
+  if (player_x + player_size_ < hole_x - (hole_width_ / 2) ||
+      player_x - player_size_ > hole_x + (hole_width_ / 2))
+    return false;
+
+  if (player_y - player_size_ > hole_y - (hole_size_ / 2) &&
+      player_y + player_size_ < hole_y + (hole_size_ / 2))
     return false;
 
   return true;
