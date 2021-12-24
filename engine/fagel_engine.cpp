@@ -18,19 +18,24 @@ void Engine::Iterate() {
     hole.x -= 1;
 
   for (auto &player : players_) {
-    player.AddVelocity(gravity_strength_);
-    player.Iterate(holes_.front());
+    if (!player.IsAlive()) {
+      if (player.position_.x > 0)
+        player.position_.x--;
+    } else {
+      player.AddVelocity(gravity_strength_);
+      player.Iterate(holes_.front());
 
-    if (CheckCollision(player))
-      player.Kill(frame);
+      if (CheckCollision(player))
+        player.Kill(frame);
 
-    if (player.GetPosition().y < 0) {
-      player.Kill(frame);
-      player.position_.y = 0;
-    }
-    if (player.GetPosition().y >= screen_height_) {
-      player.Kill(frame);
-      player.position_.y = screen_height_ - 3;
+      if (player.GetPosition().y < 0) {
+        player.Kill(frame);
+        player.position_.y = 0;
+      }
+      if (player.GetPosition().y >= screen_height_) {
+        player.Kill(frame);
+        player.position_.y = screen_height_ - 3;
+      }
     }
   }
   frame++;
