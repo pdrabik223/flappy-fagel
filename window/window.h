@@ -8,13 +8,13 @@
 #include <SFML/Window/Event.hpp>
 
 //#include "coord.h"
+#include "view.h"
 #include <mutex>
 #include <queue>
 #include <vector>
-#include "view.h"
 
 class Window {
- public:
+public:
   Window() = delete;
   Window(int width, int height);
   Window(const sf::Vector2<float> &position, int width, int height);
@@ -22,7 +22,7 @@ class Window {
   Window &operator=(const Window &other);
   View PopFrame();
   void PushFrame(const View &new_frame);
-
+  bool IsOpen() const { return is_open_; }
 
   int GetQueueSize();
   ~Window() {
@@ -31,10 +31,11 @@ class Window {
   }
   void SetWindowLabel(const std::string &label);
 
- protected:
-
+protected:
   /// main window loop
   void MainLoop();
+
+  bool is_open_ = true;
 
   int width_;
   int height_;
@@ -51,4 +52,4 @@ class Window {
   sf::Vector2<float> position_;
 };
 
-#endif//COA_SFML_WINDOW_WINDOW_H_
+#endif // COA_SFML_WINDOW_WINDOW_H_

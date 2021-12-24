@@ -6,8 +6,8 @@
 #define FAGEL_ENGINE_PLAYER_H_
 #include <utility>
 
-#include "../window/coord.h"
 #include "../neural_net/neural_net.h"
+#include "../window/coord.h"
 class Player {
 public:
   Player(const Coord &position, unsigned id)
@@ -17,17 +17,28 @@ public:
     brain_.GetActivationFunction(-1) = ActivationFunction::SIGMOID;
   }
 
-  void Kill() { is_alive_ = false; }
+  void Kill(int kill_frame) {
+    kill_frame_ = kill_frame;
+    is_alive_ = false;
+  }
   unsigned int GetUniqueId() const { return unique_id_; }
   bool IsAlive() const { return is_alive_; }
   const Coord &GetPosition() const { return position_; }
   double GetVelocity() const { return velocity_; }
-  void AddVelocity(double vel) { velocity_ += vel; }
+  void AddVelocity(double vel) {
+    if (IsAlive())
+      velocity_ += vel;
+  }
   int GetSize() const { return size_; }
 
   void Iterate(Coord next_hole_position) {
-    if (Brain(next_hole_position))
-      velocity_ += jump_height_;
+    if (!IsAlive())
+      return;
+    if (current_jump_buffer_ == 0 && Brain(next_hole_position)) {
+      velocity_ = -jump_height_;
+      current_jump_buffer_ = jump_buffer_length_;
+    } else
+      current_jump_buffer_--;
 
     position_.y = position_.y + velocity_;
   }
@@ -40,13 +51,17 @@ public:
     return brain_.FeedForward(input)[0] > 0.5;
   }
 
-protected:
   double jump_height_ = 10;
   int size_ = 10;
+  Coord position_;
+  int jump_buffer_length_ = 40;
+  int kill_frame_ = 0;
+
+protected:
+  int current_jump_buffer_ = 0;
   NeuralNet brain_;
   unsigned unique_id_;
   bool is_alive_;
-  Coord position_;
   double velocity_;
 };
 

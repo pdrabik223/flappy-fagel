@@ -3,27 +3,37 @@
 //
 
 #include "fagel_engine.h"
-Engine::Engine(int screen_height, int screen_width)
+Engine::Engine(int screen_width, int screen_height)
     : screen_height_(screen_height), screen_width_(screen_width),
-      gravity_strength_(1), no_players_(1) {
+      no_players_(1) {
   for (unsigned int i = 0; i < no_players_; i++) {
-    players_.push_back({Coord(10, screen_height / 2), i});
+    players_.emplace_back(Coord(50, screen_height / 2), i);
   }
 }
 void Engine::Iterate() {
+  DeleteHole();
   AddHole();
+
   for (auto &hole : holes_)
     hole.x -= 1;
 
   for (auto &player : players_) {
-    player.AddVelocity(-gravity_strength_);
+    player.AddVelocity(gravity_strength_);
     player.Iterate(holes_.front());
-    if (CheckCollision(player))
-      player.Kill();
 
-    if (player.GetPosition().y < 0)
-      player.Kill();
+    if (CheckCollision(player))
+      player.Kill(frame);
+
+    if (player.GetPosition().y < 0) {
+      player.Kill(frame);
+      player.position_.y = 0;
+    }
+    if (player.GetPosition().y >= screen_height_) {
+      player.Kill(frame);
+      player.position_.y = screen_height_ - 3;
+    }
   }
+  frame++;
 }
 bool Engine::CheckCollision(const Player &player) {
   return false;

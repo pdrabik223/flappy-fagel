@@ -8,7 +8,7 @@
 
 void Window::MainLoop() {
   sf::ContextSettings settings;
-//  settings.antialiasingLevel = 8;
+  //  settings.antialiasingLevel = 8;
 
   sf::RenderWindow window(sf::VideoMode(width_, height_), "Go");
 
@@ -16,7 +16,7 @@ void Window::MainLoop() {
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   window.display();
   sf::Clock clock;
-
+  is_open_ = true;
   while (window.isOpen()) {
 
     // check all the window's events that were triggered since the last
@@ -31,8 +31,9 @@ void Window::MainLoop() {
       }
     }
 
-    //    if(clock.getElapsedTime().asMilliseconds()<150) continue;
-    //    clock.restart();
+    if (clock.getElapsedTime().asMilliseconds() < display_refresh_rate_)
+      continue;
+    clock.restart();
 
     if (GetQueueSize() != 0) {
       PopFrame().Draw(window);
@@ -40,6 +41,7 @@ void Window::MainLoop() {
     } else
       std::this_thread::sleep_for(std::chrono::milliseconds(16));
   }
+  is_open_ = false;
 }
 
 Window::Window(int width, int height)

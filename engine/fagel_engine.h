@@ -10,39 +10,52 @@
 
 class Engine {
 public:
-  Engine(int screen_height, int screen_width);
+  Engine(int screen_width, int screen_height);
   void Iterate();
   const std::vector<Player> &GetPlayers() const;
   const std::vector<Coord> &GetHoles() const;
+  void DeleteHole() {
+    if (holes_.empty())
+      return;
+    if (holes_.begin()->x < 45)
+      holes_.erase(holes_.begin());
+  }
   void AddHole() {
+
     if (holes_.size() * (hole_width_ + distance_between_holes_) > screen_width_)
       return;
+
     Coord new_hole;
-    new_hole.x = screen_width_ + hole_width_ / 2;
 
-    if (holes_.empty())
+    if (holes_.empty()) {
+      new_hole.x = screen_width_;
       new_hole.y = screen_height_ / 2;
-
-    else
+    } else {
+      new_hole.x =
+          holes_.back().x + (hole_width_ / 2) + distance_between_holes_;
       new_hole.y =
           holes_.back().y + (rand() % (hole_size_ * 4)) - (hole_size_ * 2);
+    }
     holes_.push_back(new_hole);
   }
 
-  int hole_size_ = 30;
-  int hole_width_ = 10;
-  int distance_between_holes_ = 80;
+  int hole_size_ = 40;
+  int hole_width_ = 20;
+  int distance_between_holes_ = 120;
 
   int player_size_ = 10;
 
   int screen_height_;
   int screen_width_;
 
+  double gravity_strength_ = 0.4;
+  int jump_buffer_ = 15;
+
 private:
   static bool CheckCollision(const Player &player);
 
 protected:
-  double gravity_strength_;
+  int frame = 0;
   unsigned no_players_;
   std::vector<Player> players_;
   std::vector<Coord> holes_;
