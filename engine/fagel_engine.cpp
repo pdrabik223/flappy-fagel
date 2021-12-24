@@ -4,10 +4,10 @@
 
 #include "fagel_engine.h"
 Engine::Engine(int screen_width, int screen_height)
-    : screen_height_(screen_height), screen_width_(screen_width),
-      no_players_(1) {
+    : screen_height_(screen_height), screen_width_(screen_width) {
   for (unsigned int i = 0; i < no_players_; i++) {
-    players_.emplace_back(Coord(50, screen_height / 2), i);
+    players_.emplace_back(Coord(50, screen_height / 2 + (rand() % 100) - 50),
+                          i);
   }
 }
 void Engine::Iterate() {
@@ -48,8 +48,6 @@ bool Engine::CheckCollision(Player &player) {
 
   const int &hole_x = holes_.begin()->x;
   const int &hole_y = holes_.begin()->y;
-
-
 
   if (player_x + player_size_ < hole_x - (hole_width_ / 2) ||
       player_x - player_size_ > hole_x + (hole_width_ / 2))

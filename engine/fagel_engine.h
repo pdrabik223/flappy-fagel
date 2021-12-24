@@ -51,12 +51,12 @@ public:
   double gravity_strength_ = 0.4;
   int jump_buffer_ = 15;
 
+  unsigned no_players_ = 10;
 private:
    bool CheckCollision(Player &player);
 
 protected:
   int frame = 0;
-  unsigned no_players_;
   std::vector<Player> players_;
   std::vector<Coord> holes_;
 };

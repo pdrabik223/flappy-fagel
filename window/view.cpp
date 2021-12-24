@@ -11,7 +11,7 @@
 sf::Color GenColor() {
   const unsigned char kBottomEdge = 50;
   const unsigned char kUpperEdge = 200;
-  return sf::Color::Red;
+  //  return sf::Color::Red;
   return {
       static_cast<sf::Uint8>(rand() % (kUpperEdge - kBottomEdge) + kBottomEdge),
       static_cast<sf::Uint8>(rand() % (kUpperEdge - kBottomEdge) + kBottomEdge),
