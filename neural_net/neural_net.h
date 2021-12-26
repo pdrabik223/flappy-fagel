@@ -49,6 +49,8 @@ public:
   NeuralNet(size_t input_layer_size, size_t output_layer_size);
 
   NeuralNet(const NeuralNet &other) = default;
+  NeuralNet &operator=(const NeuralNet &other) = default;
+
   NeuralNet(const std::string &path) { LoadFromFile(path); }
 
   /// sets all weights and biases to random value ranging from 0 to 1

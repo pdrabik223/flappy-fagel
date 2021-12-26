@@ -4,12 +4,19 @@
 
 #include "fagel_engine.h"
 Engine::Engine(int screen_width, int screen_height)
+    : screen_height_(screen_height), screen_width_(screen_width) {}
+
+Engine::Engine(int screen_width, int screen_height, const NeuralNet &prometheus)
     : screen_height_(screen_height), screen_width_(screen_width) {
-  for (unsigned int i = 0; i < no_players_; i++) {
-    players_.emplace_back(Coord(50, screen_height / 2 + (rand() % 100) - 50),
-                          i);
+  players_.emplace_back(Coord(50, screen_height / 2),
+                        Coord(screen_width, screen_width), 0, prometheus);
+  for (unsigned int i = 1; i < no_players_; i++) {
+    players_.emplace_back(Coord(50, screen_height / 2),
+                          Coord(screen_width, screen_width), i,
+                          NextGen(prometheus));
   }
 }
+
 void Engine::Iterate() {
   DeleteHole();
   AddHole();

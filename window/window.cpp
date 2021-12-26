@@ -10,7 +10,7 @@ void Window::MainLoop() {
   sf::ContextSettings settings;
   //  settings.antialiasingLevel = 8;
 
-  sf::RenderWindow window(sf::VideoMode(width_, height_), "Go");
+  sf::RenderWindow window(sf::VideoMode(width_, height_), "flappy fagel");
 
   window.setPosition(sf::Vector2i(position_.x, position_.y));
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
