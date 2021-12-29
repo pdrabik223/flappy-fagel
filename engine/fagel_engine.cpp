@@ -8,17 +8,24 @@ Engine::Engine(int screen_width, int screen_height)
 
 Engine::Engine(int screen_width, int screen_height, const NeuralNet &prometheus)
     : screen_height_(screen_height), screen_width_(screen_width) {
-  players_.emplace_back(Coord(50, screen_height / 2),
-                        Coord(screen_width, screen_width), 0, prometheus);
-  for (unsigned int i = 1; i < no_players_; i++) {
-    players_.emplace_back(Coord(50, screen_height / 2),
-                          Coord(screen_width, screen_width), i,
+  players_.emplace_back(Coord(50, screen_height_ / 2),
+                        Coord(screen_width_, screen_width_), 0, prometheus);
+  SpawnPlayers(prometheus);
+}
+
+void Engine::SpawnPlayers(const NeuralNet &prometheus) {
+  players_.clear();
+  players_.emplace_back(Coord(50, screen_height_ / 2),
+                        Coord(screen_width_, screen_height_), 0, prometheus);
+
+  for (unsigned int i = 1; i < no_players_; i++)
+    players_.emplace_back(Coord(50, screen_height_ / 2),
+                          Coord(screen_width_, screen_height_), i,
                           NextGen(prometheus));
-  }
 }
 
 void Engine::Iterate() {
-  DeleteHole();
+  bool award_points = DeleteHole();
   AddHole();
 
   for (auto &hole : holes_)
@@ -33,19 +40,21 @@ void Engine::Iterate() {
       player.Iterate(holes_.front());
 
       if (CheckCollision(player))
-        player.Kill(frame);
+        player.Kill(frame_);
 
       if (player.GetPosition().y < 0) {
-        player.Kill(frame);
+        player.Kill(frame_);
         player.position_.y = 0;
       }
       if (player.GetPosition().y >= screen_height_) {
-        player.Kill(frame);
+        player.Kill(frame_);
         player.position_.y = screen_height_ - 3;
       }
+      if (award_points && player.IsAlive())
+        player.points_ = points_;
     }
   }
-  frame++;
+  frame_++;
 }
 bool Engine::CheckCollision(Player &player) {
   // check if the player ISN'T in range of barrier a.k.a. touches the pipe
@@ -65,31 +74,8 @@ bool Engine::CheckCollision(Player &player) {
     return false;
 
   return true;
-
-  //  Coord circle_distance ;
-  //
-  //  circle_distance .x = abs(circle.x - rect.x);
-  //  circle_distance.y = abs(circle.y - rect.y);
-  //
-  //  if (circle_distance.x > (rect.width / 2 + circle.r)) {
-  //    return false;
-  //  }
-  //  if (circle_distance.y > (rect.height / 2 + circle.r)) {
-  //    return false;
-  //  }
-  //
-  //  if (circle_distance.x <= (rect.width / 2)) {
-  //    return true;
-  //  }
-  //  if (circle_distance.y <= (rect.height / 2)) {
-  //    return true;
-  //  }
-  //
-  //  cornerDistance_sq = (circle_distance.x - rect.width / 2) ^
-  //                      2 + (circle_distance.y - rect.height / 2) ^ 2;
-  //
-  //  return (cornerDistance_sq <= (circle.r ^ 2));
-  return false;
 }
 const std::vector<Player> &Engine::GetPlayers() const { return players_; }
 const std::vector<Coord> &Engine::GetHoles() const { return holes_; }
+int Engine::GetPoints() const { return points_; }
+int Engine::GetFrame() const { return frame_; }

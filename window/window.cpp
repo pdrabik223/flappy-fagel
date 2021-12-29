@@ -35,11 +35,14 @@ void Window::MainLoop() {
       continue;
     clock.restart();
 
-    if (GetQueueSize() != 0) {
+    if (GetQueueSize() > 0) {
       PopFrame().Draw(window);
       window.display();
-    } else
+    } else if (GetQueueSize() == 0)
       std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    else {
+      throw "something wrong with queue";
+    }
   }
   is_open_ = false;
 }

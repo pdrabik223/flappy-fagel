@@ -17,21 +17,18 @@ public:
   const std::vector<Player> &GetPlayers() const;
   const std::vector<Coord> &GetHoles() const;
 
-  void SpawnPlayers(const NeuralNet &prometheus) {
-    players_.emplace_back(Coord(50, screen_height_ / 2),
-                          Coord(screen_width_, screen_height_), 0, prometheus);
-    for (unsigned int i = 1; i < no_players_; i++) {
-      players_.emplace_back(Coord(50, screen_height_ / 2),
-                            Coord(screen_width_, screen_height_), i,
-                            NextGen(prometheus));
-    }
-  }
-  void DeleteHole() {
+  void SpawnPlayers(const NeuralNet &prometheus);
+  bool DeleteHole() {
     if (holes_.empty())
-      return;
-    if (holes_.begin()->x < 45)
+      return false;
+    if (holes_.begin()->x < 45) {
       holes_.erase(holes_.begin());
+      points_++;
+      return true;
+    }
+    return false;
   }
+
   NeuralNet NextGen(const NeuralNet &father) {
     NeuralNet next_gen(father);
 
@@ -98,9 +95,9 @@ public:
         best_player_id = i;
     return players_[best_player_id];
   }
-  int hole_size_ = 100;
-  int hole_width_ = 15;
-  int distance_between_holes_ = 200;
+  int hole_size_ = 150;
+  int hole_width_ = 5;
+  int distance_between_holes_ = 305;
 
   int player_size_ = 10;
 
@@ -108,16 +105,18 @@ public:
   int screen_width_;
 
   double gravity_strength_ = 0.4;
-  int jump_buffer_ = 15;
 
   unsigned no_players_ = 1000;
   double learning_rate_ = 0.1;
+  int GetPoints() const;
+  int GetFrame() const;
 
 private:
   bool CheckCollision(Player &player);
 
 protected:
-  int frame = 0;
+  int points_ = 0;
+  int frame_ = 0;
   std::vector<Player> players_;
   std::vector<Coord> holes_;
 };
