@@ -4,7 +4,7 @@
 
 #ifndef THELOCKSCREENQUESTION_SFML_WINDOW_VIEW_H_
 #define THELOCKSCREENQUESTION_SFML_WINDOW_VIEW_H_
-#include "../engine/fagel_engine.h"
+#include "../fagel/fagel_engine.h"
 #include "SFML/Graphics/CircleShape.hpp"
 #include "SFML/Graphics/RectangleShape.hpp"
 #include <SFML/Graphics/Font.hpp>
@@ -13,13 +13,13 @@
 class View {
 public:
   View() = default;
-  View(const Engine &engine);
+  explicit View(const FagelEngine &engine);
   View(const View &other) = default;
   View &operator=(const View &other) = default;
 
   virtual void Draw(sf::RenderWindow &window);
   std::vector<sf::CircleShape> players_;
-  std::vector<sf::RectangleShape> pipes_;
+  std::vector<sf::RectangleShape> obstacles_;
   std::vector<sf::Text> labels_;
   static sf::Font font_;
 };

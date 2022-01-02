@@ -1,7 +1,7 @@
 //
 // Created by piotr on 22/12/2021.
 //
-#include "fagel_engine.h"
+#include "fagel/fagel_engine.h"
 #include "neural_net.h"
 #include "window.h"
 #include <iostream>
@@ -9,9 +9,9 @@
 int main() {
   srand(1);
 
-  NeuralNet deep_thot(3, {9, 4}, 1);
-  deep_thot.GetActivationFunction(0) = ActivationFunction::SIGMOID;
-  deep_thot.GetActivationFunction(1) = ActivationFunction::SIGMOID;
+  NeuralNet deep_thot(3, {9, 9}, 1);
+  //  deep_thot.GetActivationFunction(0) = ActivationFunction::SIGMOID;
+  //  deep_thot.GetActivationFunction(1) = ActivationFunction::SIGMOID;
   deep_thot.GetActivationFunction(2) = ActivationFunction::SIGMOID;
   //  deep_thot.GetActivationFunction(3) = ActivationFunction::SIGMOID;
 
@@ -22,11 +22,11 @@ int main() {
 
   Window screen(800, 800);
   for (int i = 1; i < 1500; i++) {
-    Engine game(800, 800);
+    FagelEngine game(800, 800);
     //    if (i % 4 == 0)
 
-    if (best_fagel.points_ > 1)
-      game.learning_rate_ = learning_rate / pow(10, best_fagel.points_);
+    if (best_fagel.points_ > 2)
+      game.learning_rate_ = learning_rate / pow(10, best_fagel.points_ - 1);
     //    else if (best_fagel.points_ > 1)
     //      game.learning_rate_ = learning_rate;
     //    else
@@ -35,8 +35,8 @@ int main() {
     game.SpawnPlayers(deep_thot);
 
     while (game.CountLiveFagels() != 0) {
-      if (i > 50)
-        screen.PushFrame(game);
+      if (i > 20)
+        screen.PushFrame(View(game));
       game.Iterate();
     }
 
@@ -53,7 +53,7 @@ int main() {
     if (i % 25 == 24)
       learning_rate /= 2.0;
 
-    Engine game(800, 600, deep_thot);
+    FagelEngine game(800, 600, deep_thot);
     //    game.learning_rate_ = learning_rate;
     game.SpawnPlayers(deep_thot);
 

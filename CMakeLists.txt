@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 project(fagel)
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(engine)
+include_directories(fagel)
 include_directories(window)
 include_directories(matrix)
 include_directories(neural_net)
@@ -26,15 +26,15 @@ set(neural_net_dir
         neural_net/linear_layer.cpp
         )
 
-set(engine_dir
-        engine/fagel_engine.h
-        engine/fagel_engine.cpp
-        engine/player.h
-        engine/player.cpp
+set(fagel_dir
+        fagel/fagel_engine.h
+        fagel/fagel_engine.cpp
+        fagel/player.h
+        fagel/player.cpp
         )
 add_executable(main main.cpp
         ${sfml_window_dir}
-        ${engine_dir}
+        ${fagel_dir}
         ${neural_net_dir}
         )
 

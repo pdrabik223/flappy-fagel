@@ -42,11 +42,11 @@ public:
   bool is_alive_ = true;
   int points_ = 0;
 
+  unsigned unique_id_;
 protected:
   Coord screen_size_;
   int current_jump_buffer_ = 0;
   NeuralNet brain_;
-  unsigned unique_id_;
 };
 
 #endif // FAGEL_ENGINE_PLAYER_H_

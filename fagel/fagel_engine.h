@@ -8,10 +8,10 @@
 #include "player.h"
 #include <vector>
 
-class Engine {
+class FagelEngine {
 public:
-  Engine(int screen_width, int screen_height);
-  Engine(int screen_width, int screen_height, const NeuralNet &prometheus);
+  FagelEngine(int screen_width, int screen_height);
+  FagelEngine(int screen_width, int screen_height, const NeuralNet &prometheus);
 
   void Iterate();
   const std::vector<Player> &GetPlayers() const;
