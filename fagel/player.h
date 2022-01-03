@@ -36,13 +36,14 @@ public:
   double jump_height_ = 10;
   int size_ = 10;
   Coord position_;
-  int jump_buffer_length_ = 10;
+  int jump_buffer_length_ = 0;
   int kill_frame_ = 0;
   double velocity_ = 0;
   bool is_alive_ = true;
   int points_ = 0;
 
   unsigned unique_id_;
+
 protected:
   Coord screen_size_;
   int current_jump_buffer_ = 0;

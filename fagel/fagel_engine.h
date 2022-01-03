@@ -8,6 +8,8 @@
 #include "player.h"
 #include <vector>
 
+#define REAL_RAND ((double)rand() / (double)RAND_MAX)
+
 class FagelEngine {
 public:
   FagelEngine(int screen_width, int screen_height);
@@ -33,22 +35,22 @@ public:
     NeuralNet next_gen(father);
 
     for (int i = 0; i < next_gen.LayersCount(); i++) {
+
       for (int x = 0; x < next_gen.Weights(i).GetHeight(); x++)
         for (int y = 0; y < next_gen.Weights(i).GetWidth(); y++)
-          if (rand() % 2 == 0)
-            next_gen.Weights(i).Get(x, y) +=
-                ((double)rand() / (double)RAND_MAX) * learning_rate_;
-          else
-            next_gen.Weights(i).Get(x, y) -=
-                ((double)rand() / (double)RAND_MAX) * learning_rate_;
-
+          if (REAL_RAND < percentage_of_genes_changed_)
+            if (rand() % 2 == 0) {
+              next_gen.Weights(i).Get(x, y) += REAL_RAND * learning_rate_;
+            } else {
+              next_gen.Weights(i).Get(x, y) -= REAL_RAND * learning_rate_;
+            }
       for (int x = 0; x < next_gen.Biases(i).GetHeight(); x++)
-        if (rand() % 2 == 0)
-          next_gen.Biases(i).Get(x) +=
-              ((double)rand() / (double)RAND_MAX) * learning_rate_;
-        else
-          next_gen.Biases(i).Get(x) -=
-              ((double)rand() / (double)RAND_MAX) * learning_rate_;
+        if (REAL_RAND < percentage_of_genes_changed_)
+          if (rand() % 2 == 0) {
+            next_gen.Biases(i).Get(x) += REAL_RAND * learning_rate_;
+          } else {
+            next_gen.Biases(i).Get(x) -= REAL_RAND * learning_rate_;
+          }
     }
     return next_gen;
   }
@@ -69,8 +71,8 @@ public:
       new_hole.x =
           holes_.back().x + (hole_width_ / 2) + distance_between_holes_;
 
-      new_hole.y =
-          holes_.back().y + (rand() % (hole_size_ * 4)) - (hole_size_ * 2);
+      new_hole.y = screen_height_ - holes_.back().y +
+                   (rand() % (hole_size_ * 4)) - (hole_size_ * 2);
 
       if (new_hole.y <= hole_size_)
         new_hole.y = hole_size_;
@@ -107,7 +109,10 @@ public:
   double gravity_strength_ = 0.4;
 
   unsigned no_players_ = 1000;
-  double learning_rate_ = 0.1;
+
+  double learning_rate_ = 0.08;
+  double percentage_of_genes_changed_ = 0.08;
+
   int GetPoints() const;
   int GetFrame() const;
 

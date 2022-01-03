@@ -5,38 +5,55 @@
 #include "neural_net.h"
 #include "window.h"
 #include <iostream>
+#include <stdio.h>
+#include <time.h>
+
+std::string CurrentDateTime() {
+  time_t now = time(0);
+  struct tm tstruct;
+  char buf[80];
+  tstruct = *localtime(&now);
+  // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+  // for more information about date/time format
+  strftime(buf, sizeof(buf), "%d.%m.%Y-%H.%M.%S", &tstruct);
+
+  return buf;
+}
+
+std::string GenName(const std::string &directory, int score) {
+  std::string name = directory;
+  //  auto end = std::chrono::system_clock::now();
+  //  std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+  name += CurrentDateTime();
+  //  name.erase(name.size() - 1);
+  //  for (auto &i : name)
+  //    if (i == ' ')
+  //      i = '_';
+  name += "-score-" + std::to_string(score);
+
+  return name;
+}
 
 int main() {
   srand(1);
 
-  NeuralNet deep_thot(3, {9, 9}, 1);
-  //  deep_thot.GetActivationFunction(0) = ActivationFunction::SIGMOID;
-  //  deep_thot.GetActivationFunction(1) = ActivationFunction::SIGMOID;
+  //  NeuralNet deep_thot("../deep_thot");
+
+  NeuralNet deep_thot(3, {9, 5}, 1);
+  deep_thot.GetActivationFunction(0) = ActivationFunction::SIGMOID;
+  deep_thot.GetActivationFunction(1) = ActivationFunction::SIGMOID;
   deep_thot.GetActivationFunction(2) = ActivationFunction::SIGMOID;
-  //  deep_thot.GetActivationFunction(3) = ActivationFunction::SIGMOID;
 
-  //  deep_thot.FillRandom();
-
-  double learning_rate = 0.01;
   Player best_fagel;
-
   Window screen(800, 800);
   for (int i = 1; i < 1500; i++) {
     FagelEngine game(800, 800);
-    //    if (i % 4 == 0)
-
-    if (best_fagel.points_ > 2)
-      game.learning_rate_ = learning_rate / pow(10, best_fagel.points_ - 1);
-    //    else if (best_fagel.points_ > 1)
-    //      game.learning_rate_ = learning_rate;
-    //    else
-    //      game.learning_rate_ = 0.1;
 
     game.SpawnPlayers(deep_thot);
 
-    while (game.CountLiveFagels() != 0) {
-      if (i > 20)
-        screen.PushFrame(View(game));
+    while (game.CountLiveFagels() != 0 && game.GetPoints() < 100) {
+      //      if (i > 500)
+      screen.PushFrame(View(game));
       game.Iterate();
     }
 
@@ -46,27 +63,10 @@ int main() {
     std::clog << "iteration: " << i
               << " longest live: " << best_fagel.kill_frame_
               << " points earned: " << best_fagel.points_ << "\n";
-    //    game.SpawnPlayers(deep_thot);
+    if (game.GetPoints() >= 100)
+      break;
   }
-
-  for (int i = 0; i < 100; i++) {
-    if (i % 25 == 24)
-      learning_rate /= 2.0;
-
-    FagelEngine game(800, 600, deep_thot);
-    //    game.learning_rate_ = learning_rate;
-    game.SpawnPlayers(deep_thot);
-
-    while (game.CountLiveFagels() != 0) {
-      //      screen.PushFrame(game);
-      game.Iterate();
-    }
-    const Player &best_fagel = game.GetBestPlayer();
-    std::clog << "iteration: " << i
-              << " longest_live: " << best_fagel.kill_frame_ << "\n";
-    deep_thot = best_fagel.GetBrain();
-  }
-  deep_thot.SaveToFile("../deep_thot");
+  deep_thot.SaveToFile(GenName("../best_fagels/", best_fagel.points_));
 
   printf("yey");
   return 0;
